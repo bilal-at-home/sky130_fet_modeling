@@ -1,0 +1,54 @@
+** sch_path: /home/bilal/model_generation/fet_sweep.sch 
+**.subckt fet_sweep 
+VG1 nmos_vgs GND {vgs} 
+XM1 nmos_vds nmos_vgs GND GND sky130_fd_pr__nfet_01v8 L={l} W=5 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' 
++ as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' 
++ nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1 
+VD1 nmos_vds GND {vds} 
+XM2 GND net2 net1 net1 sky130_fd_pr__pfet_01v8 L={l} W=5 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W'
++ sa=0 sb=0 sd=0 mult=1 m=1
+VD2 net1 GND {vds}
+Vg2 net1 net2 {vgs}
+
+.save i(vds) 
+**** begin user architecture code 
+
+
+.lib D:\Users\Bilal\TinyTapeout\volare\sky130\versions\bdc9412b3e468c102d01b7cf6337be06ec6e9c9a\sky130A\libs.tech\combined\sky130.lib.spice tt 
+.param vds= 0.9
+.param vgs= 0.6
+.param l= 0.15
+.op
+.control 
+	set dut1 = '@m.xm1.msky130_fd_pr__nfet_01v8' 
+	set dut2 = '@m.xm2.msky130_fd_pr__pfet_01v8' 
+	let cur_vgs = 0
+	let step_vgs = 0.5
+	let max_vgs = 1.8
+	let cur_vds = 0
+	let step_vds = 0.5
+	let max_vds = 1.8
+	set lvalues = ( 0.15 0.18 0.25 0.5 1 2 5 )
+	set appendwrite
+	foreach lvalue $lvalues
+		let cur_vds = 0
+		while cur_vds <= max_vds
+			let cur_vgs = 0
+			while cur_vgs <= max_vgs
+				echo current vgs is $&cur_vgs vds is $&cur_vds l is $lvalue
+				alterparam vgs = $&cur_vgs
+				alterparam vds = $&cur_vds
+				alterparam l = $lvalue
+				reset
+				run
+				wrdata sweep.csv {$dut1}[vgs] {$dut1}[vds] {$dut1}[l] {$dut1}[id] 
+				let cur_vgs = cur_vgs + step_vgs
+			end
+			let cur_vds = cur_vds + step_vds
+		end	
+	end
+.endc 
+.save all 
+.GLOBAL GND 
+.end 

@@ -1,0 +1,24 @@
+** sch_path: /home/bilal/model_generation/fet_sweep.sch
+**.subckt fet_sweep
+VGS nmos_vgs GND {vgs}
+XM1 nmos_vds nmos_vgs GND GND sky130_fd_pr__nfet_01v8 L={l} W=5 nf=1 ad='int((nf+1)/2) * W/nf * 0.29'
++ as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)'
++ nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+VDS nmos_vds GND {vds}
+.save i(vds)
+**** begin user architecture code
+
+
+.lib D:\Users\Bilal\TinyTapeout\volare\sky130\versions\bdc9412b3e468c102d01b7cf6337be06ec6e9c9a\sky130A\libs.tech\combined\sky130.lib.spice tt
+.param vds=0.9
+.param vgs=0.6
+.param l=0.15
+.save all
+.op
+.control
+	dc VGS 0.6 1.2 0.025
+	plot -2*vds#branch/@m.xm1.msky130_fd_pr__nfet_01v8[gm]
+.endc
+
+.GLOBAL GND
+.end
