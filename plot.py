@@ -26,7 +26,7 @@ for filename in filename_list:
 	with open(filename,'r') as csvfile:
 		file = pandas.read_csv(csvfile,header=None,index_col=False,skipinitialspace=True,sep='\\s+',names=param_list_extended,usecols=param_list)
 	file['delta'] = file.apply(lambda row: 2*row.id/row.gm, axis=1)
-	l_list = [0.15, 0.18, 0.25, 0.5, 1, 2, 5]
+	l_list = [0.15, 0.18, 0.25, 0.5, 1, 2]
 	#l_list = [0.15]
 	fig1, ax1 = plt.subplots()
 	fig2, ax2 = plt.subplots()
@@ -56,7 +56,7 @@ for filename in filename_list:
 	#print(to_print)
 
 	ax1.set_xlim(0.1,0.5)
-	ax1.set_ylim(0.0,100)
+	#ax1.set_ylim(0.0,100)
 	ax1.set_xlabel(u'Δ [V]')
 	ax1.set_ylabel(u'Id/W [uA/um]')
 	ax1.set_title(u'Current density v/s Δ = 2Id/gm @vds='+str(vds))
@@ -65,7 +65,7 @@ for filename in filename_list:
 	fig1.savefig(filename.replace('sweep_','').replace('.csv','_')+'CurrentDensity.png')
 
 	ax2.set_xlim(0.1,1.8)
-	ax2.set_ylim(0.0,100)
+	ax2.set_ylim(0.0,200)
 	ax2.set_xlabel(u'Vds [V]')
 	ax2.set_ylabel(u'rds [kOhm]')
 	ax2.set_title(u'Rds v/s Vds @W=5um;vgs='+str(vgs))
@@ -74,7 +74,7 @@ for filename in filename_list:
 	fig2.savefig(filename.replace('sweep_','').replace('.csv','_')+'RdsVds.png')
 
 	ax3.set_xlim(0.1,0.5)
-	ax3.set_ylim(0.0,170)
+	ax3.set_ylim(0.0,300)
 	ax3.set_xlabel(u'Δ [V]')
 	ax3.set_ylabel(u'gmrds')
 	ax3.set_title(u'gmRds v/s Δ @W=5um;vds='+str(vds))
