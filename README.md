@@ -4,6 +4,6 @@ Delta is defined as 2Id/gm in place of Vov.
 Plots are generated for simulated data
 
 <p align="center">
-<img align="left" width="100" height="100" src="nmos_RdsVds.png"> 
-<img align="left" width="100" height="100" src="pmos_RdsVds.png">
+<img align="left" width="45%" src="nmos_RdsVds.png"> 
+<img align="left" width="45%" src="pmos_RdsVds.png">
 </p>
